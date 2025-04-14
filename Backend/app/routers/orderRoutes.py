@@ -2,10 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.models import OrderModel
 from app.schemas import OrderSchema, OrderResponseSchema
 from app.config import orders_collection
+from typing import List
 import httpx
 
 
-# Example geocoding function (replace with actual implementation)
+# Example geocoding function 
 async def geocode_address(address: str):
     
     api_key = "8ecbb7941ef941dd8e9e87705b16fcb8"  # Replace with your actual Geoapify API key
@@ -76,8 +77,50 @@ async def create_new_order(order: OrderSchema):
     result =  orders_collection.insert_one(order_dict)
     return OrderResponseSchema(
         id=str(result.inserted_id),
-        message="Order created successfully",
         **order_dict
     )
-    # return geo_data
-    # return {'msg':'Succesful yup '}
+  
+@router.get("/orders", response_model=List[OrderResponseSchema])
+async def get_all_orders():
+    """
+    Retrieve all orders from the database.
+    Returns a list of all orders with their details.
+    """
+    try:
+        # Find all documents in the orders collection
+        cursor = orders_collection.find({})
+        
+        # Convert MongoDB cursor to list of OrderResponseSchema objects
+        orders = []
+        for document in cursor:
+            # Convert ObjectId to string for the id field
+            document["id"] = str(document.pop("_id"))
+            orders.append(document)
+        
+        # Check if orders list is empty
+        if not orders:
+            # You can either return an empty list
+            return []
+            
+            # Or if you prefer to return a specific message, use this instead:
+            # raise HTTPException(status_code=404, detail="No orders found")
+        
+        return orders
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve orders: {str(e)}")
+
+
+# @router.get("/orders", response_model=List[OrderResponseSchema])
+# async def get_all_orders():
+#     try:
+#         # Fetch all orders asynchronously and convert cursor to a list
+#         orders = await orders_collection.find({}).to_list(length=None)
+        
+#         # Convert MongoDB _id to string and rename it to 'id'
+#         for order in orders:
+#             order["id"] = str(order.pop("_id"))
+        
+#         # Return an empty list if no orders found or the list of orders
+#         return orders
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Failed to retrieve orders: {str(e)}")

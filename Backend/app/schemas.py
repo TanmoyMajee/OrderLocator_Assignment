@@ -12,6 +12,6 @@ class OrderSchema(BaseModel):
 
 class OrderResponseSchema(OrderSchema): 
     id: str
-    message: str
+    # message: str
     longitude:float
     latitude:float
