@@ -7,5 +7,5 @@ class OrderModel(BaseModel):
     phone: int
     address: str
     delivery_time: int
-    longitude: str
-    latitude: str
+    longitude: float
+    latitude: float

@@ -10,7 +10,8 @@ class OrderSchema(BaseModel):
 
 
 
-class OrderResponseSchema(OrderSchema):
+class OrderResponseSchema(OrderSchema): 
     id: str
     message: str
-    
+    longitude:float
+    latitude:float
