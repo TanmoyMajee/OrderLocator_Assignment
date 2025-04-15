@@ -4,9 +4,9 @@ from pydantic import BaseModel
 
 class OrderSchema(BaseModel):
     name: str
-    phone: int
+    phone: str
     address: str
-    delivery_time: int
+    delivery_time: str
 
 
 

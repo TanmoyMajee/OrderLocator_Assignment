@@ -105,7 +105,7 @@ async def get_all_orders():
             # Or if you prefer to return a specific message, use this instead:
             # raise HTTPException(status_code=404, detail="No orders found")
         
-        return orders
+        return orders 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve orders: {str(e)}")
 

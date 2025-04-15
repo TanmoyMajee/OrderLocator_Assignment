@@ -4,9 +4,9 @@ from pydantic import BaseModel
 
 class OrderModel(BaseModel):
     name: str
-    phone: int
+    phone: str
     address: str
-    delivery_time: int 
+    delivery_time: str
     longitude: float
-    latitude: float
+    latitude: float 
 
