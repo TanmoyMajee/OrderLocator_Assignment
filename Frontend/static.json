@@ -1,0 +1,9 @@
+{
+  "root": "build",
+  "routes": [
+    {
+      "src": "^/(?!static|api).*$",
+      "dest": "/index.html"
+    }
+  ]
+}

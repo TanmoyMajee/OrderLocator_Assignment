@@ -5,7 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 app= FastAPI()
 
 origins = [
-    "http://localhost:5173",  # Example: React frontend
+  "https://orderlocator-assignment.onrender.com",
+  "http://localhost:5173",
 ]
 
 app.add_middleware(
