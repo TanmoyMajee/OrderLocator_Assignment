@@ -13,7 +13,7 @@ function Map() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/orders')
+        const response = await axios.get('https://orderlocatorbackendassigment.vercel.app/orders')
         console.log(response.data)
         setOrders(response.data)
       } catch (error) {

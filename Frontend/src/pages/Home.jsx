@@ -15,7 +15,7 @@ function Home() {
     // Process the order submission using individual state values
     // console.log('Order submitted:', { name, phone, address, deliveryTime })
     try{
-      const response =await axios.post('http://127.0.0.1:8000/orders', {
+      const response =await axios.post('https://orderlocatorbackendassigment.vercel.app/orders', {
         name,
         phone,
         address,
