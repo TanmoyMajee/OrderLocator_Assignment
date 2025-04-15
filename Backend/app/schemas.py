@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-# from typing import Optional, List, Dict, Any, Union
+
 
 class OrderSchema(BaseModel):
     name: str
@@ -12,6 +12,5 @@ class OrderSchema(BaseModel):
 
 class OrderResponseSchema(OrderSchema): 
     id: str
-    # message: str
     longitude:float
     latitude:float
