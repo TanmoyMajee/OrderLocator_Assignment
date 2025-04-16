@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { toast } from 'react-toastify'
+import { toast , ToastContainer } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { ClipLoader } from 'react-spinners';
 
@@ -18,7 +18,7 @@ function Home() {
     // console.log('Order submitted:', { name, phone, address, deliveryTime })
     setIsSubmitting(true)
     try{
-      const response =await axios.post('https://orderlocatorbackendassigment.vercel.app/orders', {
+      const response = await axios.post('http://127.0.0.1:8000/orders', {
         name,
         phone,
         address,
@@ -31,10 +31,11 @@ function Home() {
         navigate('/map')
       }
       else {
-        toast.error('Error submitting order')
+        toast.error('Addres Not Found')
         console.log('Error submitting order:', response.statusText)
       }
     }catch (error) {
+      toast.error('Addres Not Found')
     console.error('Error submitting order:', error)
   }
   finally{
@@ -115,7 +116,7 @@ function Home() {
         >
           {isSubmitting ? (
             <>
-              <ClipLoader size={5} color="white" className="mr-2" />
+              <ClipLoader size={10} color="white" className="mr-2" />
               Submitting...
             </>
           ) : (
@@ -123,6 +124,7 @@ function Home() {
           )}
         </button>
       </form>
+      <ToastContainer/>
     </div>
   )
 }
