@@ -3,6 +3,7 @@ from app.models import OrderModel
 from app.schemas import OrderSchema, OrderResponseSchema
 from app.config import orders_collection
 from typing import List
+from datetime import datetime
 import httpx
 
 
@@ -17,6 +18,7 @@ async def geocode_address(address: str):
         "format": "json", 
         "limit": 1         # Limit the response to only the most relevant result
     }
+
     # hit a get request to the url with the params
     async with httpx.AsyncClient() as ac:
         try:
@@ -53,9 +55,14 @@ router = APIRouter()
 
 @router.post("/orders",response_model=OrderResponseSchema)
 async def create_new_order(order: OrderSchema):
+
+    if not order.address or order.address.strip().upper() == "NULL":
+        raise HTTPException(status_code=400, detail="Address cannot be NULL")
+
     geo_data =await geocode_address(order.address)
     print(geo_data)
     #  validate the orderModel
+    created_at = datetime.utcnow()
     order_model = OrderModel(
         name=order.name,
         phone=order.phone,
@@ -63,6 +70,7 @@ async def create_new_order(order: OrderSchema):
         delivery_time=order.delivery_time, 
         longitude=geo_data['longitude'],
         latitude=geo_data['latitude'],
+        created_at=created_at
     )
     order_dict = order_model.dict()
     result =  orders_collection.insert_one(order_dict)
@@ -79,7 +87,7 @@ async def get_all_orders():
     """
     try:
         # Find all documents in the orders collection
-        cursor = orders_collection.find({})
+        cursor = orders_collection.find({}).sort("created_at", -1)
         
         # Convert MongoDB cursor to list of OrderResponseSchema objects
         orders = []

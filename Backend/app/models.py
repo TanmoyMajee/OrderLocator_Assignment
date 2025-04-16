@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from datetime import datetime
 
 class OrderModel(BaseModel):
     name: str
@@ -8,4 +8,5 @@ class OrderModel(BaseModel):
     delivery_time: str
     longitude: float
     latitude: float 
+    created_at: datetime
 

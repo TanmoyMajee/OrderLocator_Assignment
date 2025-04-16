@@ -32,11 +32,12 @@ function Map() {
         setOrders(response.data);
 
         // If we have orders with coordinates, center the map on the first one
-        if (response.data.length > 0 && response.data[0].lat && response.data[0].lng) {
+        if (response.data.length > 0 && response.data[0].latitude && response.data[0].longitude) {
           setMapCenter([response.data[0].latitude, response.data[0].longitude]);
         }
 
         setIsLoading(false);
+        toast.success(`Total Order : ${response.data.length}`)
       } catch (error) {
         console.error("Error fetching orders:", error);
         setIsLoading(false);
@@ -56,7 +57,7 @@ function Map() {
   }
 
   return (
-    <div className="map-container" style={{ height: '100vh', width: '100%' }}>
+    <div className="map-container" style={{ height: '90vh', width: '100%' }}>
       <MapContainer
         center={mapCenter}
         zoom={13}
