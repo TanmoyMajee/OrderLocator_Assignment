@@ -1,79 +1,100 @@
 
+import React, { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { toast, ToastContainer } from 'react-toastify';
+import { ClipLoader } from 'react-spinners';
+import 'react-toastify/dist/ReactToastify.css';
+import 'leaflet/dist/leaflet.css';
+import axios from 'axios';
+import L from 'leaflet';
 
-import React, { useState, useEffect } from 'react'
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api'
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'  // Add this import
-import axios from 'axios'
+// Fix for default marker icons in Leaflet with React
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 function Map() {
-  const [orders, setOrders] = useState([])
-  const [selectedOrder, setSelectedOrder] = useState(null)
-  
+  const [orders, setOrders] = useState([]);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [mapCenter, setMapCenter] = useState([12.914933000000001,77.67554133302036]); 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('https://orderlocatorbackendassigment.vercel.app/orders')
-        console.log(response.data)
-        setOrders(response.data)
+        setIsLoading(true);
+        const response = await axios.get('https://orderlocatorbackendassigment.vercel.app/orders');
+        console.log(response.data);
+        setOrders(response.data);
+
+        // If we have orders with coordinates, center the map on the first one
+        if (response.data.length > 0 && response.data[0].lat && response.data[0].lng) {
+          setMapCenter([response.data[0].latitude, response.data[0].longitude]);
+        }
+
+        setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching orders:", error)
+        console.error("Error fetching orders:", error);
+        setIsLoading(false);
+        toast.error("Failed to load orders");
       }
-    }
-    fetchOrders()
-  }, [])
-  
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-  })
-  
-  if (!isLoaded) return <div>Loading...</div>
+    };
+
+    fetchOrders();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen w-screen">
+        <ClipLoader size={100} />
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <div className="w-[1500px] h-[600px] m-5">
-        <GoogleMap
-          mapContainerStyle={{ width: '100%', height: '100%' }}
-          center={{ lat: 17.80879, lng: 79.39076 }}
-          zoom={4}
-        >
-          {orders.map((order) => (
-            <Marker
-              key={order.id}
-              position={{ 
-                lat: parseFloat(order.latitude), 
-                lng: parseFloat(order.longitude) 
-              }}
-              onClick={() => {
-                setSelectedOrder(order)
+    <div className="map-container" style={{ height: '100vh', width: '100%' }}>
+      <MapContainer
+        center={mapCenter}
+        zoom={13}
+        style={{ height: '100%', width: '100%' }}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+
+        {orders.map((order) => (
+          <Marker
+            key={order.id}
+            position={[order.latitude, order.longitude]}
+            eventHandlers={{
+              click: () => {
+                setSelectedOrder(order);
                 toast.info(`Order ID: ${order.id}`, {
-                  position: "bottom-right",  // Changed format
+                  position: "bottom-right",
                   autoClose: 2000,
-                })
-              }}
-            />
-          ))}
-          
-          {selectedOrder && (
-            <InfoWindow
-              position={{ 
-                lat: parseFloat(selectedOrder.latitude), 
-                lng: parseFloat(selectedOrder.longitude) 
-              }}
-              onCloseClick={() => setSelectedOrder(null)}
-            >
+                });
+              }
+            }}
+          >
+            <Popup onClose={() => setSelectedOrder(null)}>
               <div>
-                <h2>{selectedOrder.name}</h2>
-                <p>{selectedOrder.address}</p>
-                <p>{selectedOrder.phone}</p>
-                <p>{selectedOrder.delivery_time}</p>
+                <h3>{order.name}</h3>
+                <p>{order.address}</p>
+                <p>{order.phone}</p>
+                <p>Delivery: {order.delivery_time}</p>
               </div>
-            </InfoWindow>
-          )}
-        </GoogleMap>
-      </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+
+      <ToastContainer />
     </div>
-  )
+  );
 }
 
-export default Map
+export default Map;

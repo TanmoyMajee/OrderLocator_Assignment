@@ -2,18 +2,21 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import { ClipLoader } from 'react-spinners';
 
 function Home() {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [address, setAddress] = useState('')
   const [deliveryTime, setDeliveryTime] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
 
   const handleSubmit =async (event) => {
     event.preventDefault()
     // Process the order submission using individual state values
     // console.log('Order submitted:', { name, phone, address, deliveryTime })
+    setIsSubmitting(true)
     try{
       const response =await axios.post('https://orderlocatorbackendassigment.vercel.app/orders', {
         name,
@@ -34,11 +37,14 @@ function Home() {
     }catch (error) {
     console.error('Error submitting order:', error)
   }
-    // Reset the form fields after submission
-    setName('')
-    setPhone('')
-    setAddress('')
-    setDeliveryTime('')
+  finally{
+      // Reset the form fields after submission
+      setName('')
+      setPhone('')
+      setAddress('')
+      setDeliveryTime('')
+      setIsSubmitting(false)
+  }
 
   }
 
@@ -105,8 +111,16 @@ function Home() {
         <button
           type="submit"
           className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+          disabled={isSubmitting}
         >
-          Submit Order
+          {isSubmitting ? (
+            <>
+              <ClipLoader size={5} color="white" className="mr-2" />
+              Submitting...
+            </>
+          ) : (
+            'Submit Order'
+          )}
         </button>
       </form>
     </div>
