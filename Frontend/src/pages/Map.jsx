@@ -26,8 +26,8 @@ function Map() {
     const fetchOrders = async () => {
       try {
         setIsLoading(true);  //http://127.0.0.1:8000
-        const response = await axios.get('http://127.0.0.1:8000/orders');
-        // const response = await axios.get('https://orderlocatorbackendassigment.vercel.app/orders');
+        // const response = await axios.get('http://127.0.0.1:8000/orders');
+        const response = await axios.get('https://orderlocatorbackendassigment.vercel.app/orders');
         console.log(response.data);
         setOrders(response.data);
 
