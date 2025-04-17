@@ -9,6 +9,13 @@ function Home() {
   const [phone, setPhone] = useState('')
   const [address, setAddress] = useState('')
   const [deliveryTime, setDeliveryTime] = useState('')
+  const [ postalCode , setPostalCode] = useState('')
+  const [ city , setCity] = useState('')
+  const [ country , setCoutry] = useState('')
+  const [ state , setState] = useState('')
+  const [ street, setStreet] = useState('')
+  const [ blockNo , setBlockNo] = useState('')
+  const [ specificAddress, setSpecificAddress] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
 
@@ -22,6 +29,12 @@ function Home() {
         name,
         phone,
         address,
+        postal_code:postalCode,
+        country,
+        state,
+        city,
+        block_no:blockNo,
+        street,
         delivery_time:deliveryTime
       }) 
       console.log(response)
@@ -44,6 +57,12 @@ function Home() {
       setPhone('')
       setAddress('')
       setDeliveryTime('')
+      setPostalCode('')
+      setCity('')
+      setCoutry('')
+      setState('')
+      setState('')
+      setBlockNo('')
       setIsSubmitting(false)
   }
 
@@ -81,20 +100,7 @@ function Home() {
             className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        <div>
-          <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-            Address
-          </label>
-          <input
-            type="text"
-            id="address"
-            value={address}
-            required
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Enter your address"
-            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+        {/* Delivary Time */}
         <div>
           <label htmlFor="deliveryTime" className="block text-sm font-medium text-gray-700 mb-1">
             Delivery Time
@@ -109,6 +115,115 @@ function Home() {
             className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+       {
+        specificAddress ? ( 
+          <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Address*
+          </label>
+          <input
+            type="text"
+            value={address}
+            required
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="Enter preferred delivery time"
+            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+           <label onClick={()=>setSpecificAddress(!specificAddress)} className="block text-sm font-medium text-gray-700 mb-1 hover:cursor-pointer">
+            Enter More Specific Address
+            </label>
+        </div>) 
+        : (
+       
+           <div>
+          <div>
+          <label  className="block text-sm font-medium text-gray-700 mb-1">
+            Country*
+          </label>
+          <input
+            type="text"
+            value={country}
+            required
+            onChange={(e) => setCoutry(e.target.value)}
+            placeholder="Enter preferred delivery time"
+            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        {/* State */}
+          <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            State*
+          </label>
+          <input
+            type="text"
+            value={state}
+            required
+            onChange={(e) => setState(e.target.value)}
+            placeholder="Enter preferred delivery time"
+            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        {/* City */}
+          <div>
+          <label  className="block text-sm font-medium text-gray-700 mb-1">
+            City*
+          </label>
+          <input
+            type="text"
+            value={city}
+            required
+            onChange={(e) => setCity(e.target.value)}
+            placeholder="Enter preferred delivery time"
+            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+                {/* Streeet */}
+          <div>
+          <label  className="block text-sm font-medium text-gray-700 mb-1">
+            street*
+          </label>
+          <input
+            type="text"
+            value={street}
+            required
+            onChange={(e) => setStreet(e.target.value)}
+            placeholder="Enter preferred delivery time"
+            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+                {/* postal Code */}
+          <div>
+          <label  className="block text-sm font-medium text-gray-700 mb-1">
+            postalCode
+          </label>
+          <input
+            value={postalCode}
+            required
+            onChange={(e) => setPostalCode(e.target.value)}
+            placeholder="Enter preferred delivery time"
+            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+                     {/* Enter Home / block No */}
+          <div>
+          <label  className="block text-sm font-medium text-gray-700 mb-1">
+            Home / Block No
+          </label>
+          <input
+            value={blockNo}
+            required
+            onChange={(e) => setBlockNo(e.target.value)}
+            placeholder="Enter preferred delivery time"
+            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+         <label onClick={()=>setSpecificAddress(!specificAddress)} className="block text-sm font-medium text-gray-700 mb-1 hover:cursor-pointer">
+            Enter genneric Address
+            </label>
+        </div>
+        )
+       }
+       
         <button
           type="submit"
           className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
