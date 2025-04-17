@@ -13,7 +13,10 @@ async def geocode_address(order: OrderSchema):
     api_key = "8ecbb7941ef941dd8e9e87705b16fcb8"  
     url = "https://api.geoapify.com/v1/geocode/search"
 
-    address_text = order.address.strip()
+    address_text=""
+
+    if order.address:
+        address_text = order.address.strip() 
 
     specific_parts = []
 
@@ -77,7 +80,7 @@ router = APIRouter()
 @router.post("/orders",response_model=OrderResponseSchema)
 async def create_new_order(order: OrderSchema):
 
-    has_general_address = order.address and order.address.strip().upper() != "NULL" and order.address.strip() != ""
+    has_general_address = order.address and order.address.strip().upper() != "NULL" and order.address.strip() != "" 
 
     has_specific_parts = all([
         order.street and order.street.strip().upper() != "NULL" and order.street.strip() != "",
