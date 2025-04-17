@@ -129,7 +129,7 @@ function Home() {
             placeholder="Enter preferred delivery time"
             className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-           <label onClick={()=>setSpecificAddress(!specificAddress)} className="block text-sm font-medium text-gray-700 mb-1 hover:cursor-pointer">
+           <label onClick={()=>setSpecificAddress(!specificAddress)} className="block text-sm font-medium text-blue-400 mb-1 hover:cursor-pointer ">
             Enter More Specific Address
             </label>
         </div>) 
@@ -215,7 +215,7 @@ function Home() {
             className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-         <label onClick={()=>setSpecificAddress(!specificAddress)} className="block text-sm font-medium text-gray-700 mb-1 hover:cursor-pointer">
+         <label onClick={()=>setSpecificAddress(!specificAddress)} className="block text-sm font-medium text-blue-400 mb-1 hover:cursor-pointer">
             Enter genneric Address
             </label>
         </div>
