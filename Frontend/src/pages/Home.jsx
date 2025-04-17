@@ -7,14 +7,14 @@ import { ClipLoader } from 'react-spinners';
 function Home() {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
-  const [address, setAddress] = useState('')
+  const [address, setAddress] = useState()
   const [deliveryTime, setDeliveryTime] = useState('')
-  const [ postalCode , setPostalCode] = useState('')
-  const [ city , setCity] = useState('')
-  const [ country , setCoutry] = useState('')
-  const [ state , setState] = useState('')
-  const [ street, setStreet] = useState('')
-  const [ blockNo , setBlockNo] = useState('')
+  const [ postalCode , setPostalCode] = useState()
+  const [ city , setCity] = useState()
+  const [ country , setCoutry] = useState()
+  const [ state , setState] = useState()
+  const [ street, setStreet] = useState()
+  const [ blockNo , setBlockNo] = useState()
   const [ specificAddress, setSpecificAddress] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
@@ -22,10 +22,10 @@ function Home() {
   const handleSubmit =async (event) => {
     event.preventDefault()
     // Process the order submission using individual state values
-    // console.log('Order submitted:', { name, phone, address, deliveryTime })
+    // console.log('Order submitted:', { name, phone, address, deliveryTime }) https://orderlocatorbackendassigment.vercel.app
     setIsSubmitting(true)
     try{
-      const response = await axios.post('https://orderlocatorbackendassigment.vercel.app/orders', {
+      const response = await axios.post('http://127.0.0.1:8000/orders', { 
         name,
         phone,
         address,
@@ -41,7 +41,17 @@ function Home() {
       if(response.status === 200) {
         console.log('Order submitted successfully')
         toast.success('Order submitted successfully')
-        navigate('/map')
+      setName('')
+      setPhone('')
+      setAddress('')
+      setDeliveryTime('')
+      setPostalCode('')
+      setCity('')
+      setCoutry('')
+      setState('')
+      setState('')
+      setBlockNo('')
+      navigate('/map')
       }
       else {
         toast.error('Addres Not Found')
@@ -53,16 +63,6 @@ function Home() {
   }
   finally{
       // Reset the form fields after submission
-      setName('')
-      setPhone('')
-      setAddress('')
-      setDeliveryTime('')
-      setPostalCode('')
-      setCity('')
-      setCoutry('')
-      setState('')
-      setState('')
-      setBlockNo('')
       setIsSubmitting(false)
   }
 
@@ -198,7 +198,6 @@ function Home() {
           </label>
           <input
             value={postalCode}
-            required
             onChange={(e) => setPostalCode(e.target.value)}
             placeholder="Enter preferred delivery time"
             className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -211,7 +210,6 @@ function Home() {
           </label>
           <input
             value={blockNo}
-            required
             onChange={(e) => setBlockNo(e.target.value)}
             placeholder="Enter preferred delivery time"
             className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
